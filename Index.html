@@ -1,143 +1,174 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contador de Tempo Decorrido</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-/* Estilos personalizados para a fonte e o efeito de 'flip clock' */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=IBM+Plex+Mono:wght@400;700&display=swap');
-
-    body {
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(to bottom, #0A1F44, #193F7D); /* Degradê de azul mais escuro */
-        margin: 0; /* Remove a margem padrão do body */
-        padding: 0; /* Remove o padding padrão do body */
-    }
-
-    .flip-card {
-        background-color: #27457A; /* Cor de fundo escura para o flip clock */
-        color: white;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        flex: 1 1 25%; /* Faz com que as caixas se expandam igualmente */
-    }
-
-    /* Linha horizontal para simular o efeito do flip clock */
-    .flip-card::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 2px; /* Espessura da linha */
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(-50%);
-        z-index: 10;
-    }
-</style>
-</head>
-<body class="flex items-center justify-center min-h-screen p-4">
-<div class="bg-[#193F7D] text-white p-8 sm:p-12 md:p-16 rounded-xl shadow-2xl max-w-4xl w-full text-center space-y-8">
-
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-widest">
-        ESTAMOS HÁ
-    </h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="@pimenteljulimar">
+    <title>Contador de Tempo Decorrido</title>
     
-    <div id="countdown-display" class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8">
-        <div class="flip-card p-4">
-            <span id="days" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold leading-none">00</span>
-            <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Dias</span>
-        </div>
-        
-        <div class="flip-card p-4">
-            <span id="hours" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold leading-none">00</span>
-            <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Horas</span>
-        </div>
-
-        <div class="flip-card p-4">
-            <span id="minutes" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold leading-none">00</span>
-            <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Minutos</span>
-        </div>
-
-        <div class="flip-card p-4">
-            <span id="seconds" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold leading-none">00</span>
-            <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Segundos</span>
-        </div>
-    </div>
-
-    <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase tracking-widest mt-8">
-        DIAS SEM CONTRATAR
-    </h2>
-    <h3 class="text-lg sm:text-xl md:text-2xl font-light opacity-80 mt-4">
-        Última contratação: Wandersson - 28 de fevereiro
-    </h3>
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <div class="mt-8 flex justify-center">
-        <img src="https://logodownload.org/wp-content/uploads/2017/02/cruzeiro-logo-escudo-5-.png" alt="Logo Cruzeiro" class="mx-auto" style="width: 160px; height: auto;">
-    </div>
-</div>
+    <style>
+        /* Importação das fontes do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=IBM+Plex+Mono:wght@400;700&display=swap');
 
-<script>
-    // Data de início para o contador. 
-    // Esta data representa o ponto de partida do contador.
-    const startDate = new Date("Feb 28, 2025 15:16:00").getTime();
-
-    // Variável para armazenar o intervalo de atualização
-    let countUpInterval;
-    
-    // Função que é executada a cada segundo para atualizar o contador
-    function updateCountUp() {
-        // Pega a data e hora atuais
-        const now = new Date().getTime();
-        
-        // Encontra a distância (tempo decorrido) entre agora e a data de início
-        const elapsedTime = now - startDate;
-
-        // Se a data de início ainda não chegou
-        if (elapsedTime < 0) {
-            // Apenas exibe zeros e para o contador
-            document.getElementById("days").innerHTML = "00";
-            document.getElementById("hours").innerHTML = "00";
-            document.getElementById("minutes").innerHTML = "00";
-            document.getElementById("seconds").innerHTML = "00";
-            return;
+        /* Aplica a fonte principal ao corpo do documento */
+        body {
+            font-family: 'Inter', sans-serif;
         }
 
-        // Cálculos para dias, horas, minutos e segundos decorridos
-        const days = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+        /* Garante que a classe .font-mono use a fonte correta */
+        .font-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
 
-        // Seleciona os elementos do HTML e atualiza com os novos valores
-        // O padStart(2, '0') garante que números menores que 10 tenham um zero na frente (ex: 05)
-        document.getElementById("days").innerHTML = String(days).padStart(2, '0');
-        document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
-        document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
-    }
+        /* Estilo do card com a linha divisória para o efeito de 'flip clock' */
+        .flip-card {
+            background-color: #27457A;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    // Inicia o contador
-    function startCountUp() {
-        // Chama a função updateCountUp imediatamente para evitar um atraso inicial
-        updateCountUp(); 
-        // Atualiza o contador a cada 1 segundo (1000ms)
-        countUpInterval = setInterval(updateCountUp, 1000);
-    }
+        /* Linha horizontal que simula a divisão do flip clock */
+        .flip-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: rgba(0, 0, 0, 0.2); /* Linha mais sutil */
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+    </style>
+</head>
 
-    // Garante que o contador comece quando a página estiver totalmente carregada
-    window.onload = startCountUp;
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#0A1F44] to-[#193F7D]">
 
-</script>
+    <main class="bg-[#193F7D] text-white p-8 sm:p-12 md:p-16 rounded-xl shadow-2xl max-w-4xl w-full text-center space-y-8">
+        
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-widest">
+            ESTAMOS HÁ
+        </h1>
+        
+        <div id="countdown-display" class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div class="flip-card">
+                <span data-unit="days" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold">00</span>
+                <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Dias</span>
+            </div>
+            
+            <div class="flip-card">
+                <span data-unit="hours" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold">00</span>
+                <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Horas</span>
+            </div>
+
+            <div class="flip-card">
+                <span data-unit="minutes" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold">00</span>
+                <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Minutos</span>
+            </div>
+
+            <div class="flip-card">
+                <span data-unit="seconds" class="font-mono text-5xl sm:text-6xl md:text-8xl font-bold">00</span>
+                <span class="text-xs sm:text-sm md:text-base mt-2 uppercase">Segundos</span>
+            </div>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase tracking-widest mt-8">
+            DIAS SEM CONTRATAR
+        </h2>
+        
+        <h3 class="text-lg sm:text-xl md:text-2xl font-light opacity-80 mt-4">
+            Última contratação: Wandersson - 28 de fevereiro
+        </h3>
+        
+        <div class="mt-8 flex justify-center">
+            <img src="https://logodownload.org/wp-content/uploads/2017/02/cruzeiro-logo-escudo-5-.png" alt="Logo Cruzeiro" class="w-40 h-auto">
+        </div>
+
+    </main>
+
+    <footer class="text-white text-center mt-8 opacity-70">
+        <p>Desenvolvido por <a href="https://twitter.com/pimenteljulimar" target="_blank" class="underline hover:text-blue-400">@pimenteljulimar</a></p>
+    </footer>
+
+    <script>
+        'use strict';
+
+        (function () {
+            // Objeto de configuração centralizado para fácil manutenção
+            const config = {
+                // Use o formato ISO 8601 (AAAA-MM-DDTHH:MM:SS) para maior compatibilidade
+                startDate: '2025-02-28T15:16:00',
+                elements: {
+                    days: document.querySelector('[data-unit="days"]'),
+                    hours: document.querySelector('[data-unit="hours"]'),
+                    minutes: document.querySelector('[data-unit="minutes"]'),
+                    seconds: document.querySelector('[data-unit="seconds"]'),
+                }
+            };
+
+            /**
+             * Formata um número para ter sempre dois dígitos, adicionando um zero à esquerda se necessário.
+             * @param {number} num - O número a ser formatado.
+             * @returns {string} O número formatado como string.
+             */
+            const formatNumber = (num) => String(num).padStart(2, '0');
+
+            /**
+             * Calcula o tempo decorrido e atualiza os elementos na tela.
+             */
+            function updateTimer() {
+                const startTime = new Date(config.startDate).getTime();
+                const now = new Date().getTime();
+                const elapsedTime = now - startTime;
+
+                // Garante que o contador não exiba valores negativos se a data for no futuro
+                if (elapsedTime < 0) return;
+
+                // Constantes para os cálculos de tempo
+                const second = 1000;
+                const minute = second * 60;
+                const hour = minute * 60;
+                const day = hour * 24;
+
+                // Calcula os valores de tempo
+                const days = Math.floor(elapsedTime / day);
+                const hours = Math.floor((elapsedTime % day) / hour);
+                const minutes = Math.floor((elapsedTime % hour) / minute);
+                const seconds = Math.floor((elapsedTime % minute) / second);
+
+                // Atualiza o HTML com os valores calculados
+                // Usar textContent é ligeiramente mais performático que innerHTML para apenas texto
+                config.elements.days.textContent = formatNumber(days);
+                config.elements.hours.textContent = formatNumber(hours);
+                config.elements.minutes.textContent = formatNumber(minutes);
+                config.elements.seconds.textContent = formatNumber(seconds);
+            }
+
+            /**
+             * Inicializa o contador.
+             */
+            function init() {
+                // Chama a função uma vez imediatamente para não haver atraso na exibição
+                updateTimer();
+                // Configura o intervalo para atualizar o contador a cada segundo
+                setInterval(updateTimer, 1000);
+            }
+
+            // Inicia o contador quando o DOM estiver completamente carregado
+            document.addEventListener('DOMContentLoaded', init);
+
+        })();
+    </script>
+
 </body>
 </html>
